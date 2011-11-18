@@ -1,6 +1,18 @@
 #include <Wire.h>
 #include <string.h>
 
+#define OPENGRIP 11
+#define CLOSEGRIP 10
+#define M3U 9
+#define M3D 8
+#define M2U 6
+#define M2D 7
+#define M1U 4
+#define M1D 5
+#define TURNLEFT 2
+#define TURNRIGHT 3
+#define SEARCHLIGHT 12
+
 #undef int
 #include <stdio.h>
 
@@ -50,6 +62,9 @@ send_zero ()
 void
 loop ()
 {
+  
+  //demoLoop();
+  //return;
   Wire.requestFrom (0x52, 6);	// request data from nunchuck
   while (Wire.available ())
   {
@@ -156,11 +171,11 @@ print ()
 
   if(joy_x_axis<80){
     //rotate left
-    digitalWrite(10,HIGH);
+    digitalWrite(TURNLEFT,HIGH);
   }
   else if(joy_x_axis>190){
     //rotate right
-    digitalWrite(11,HIGH); 
+    digitalWrite(TURNRIGHT,HIGH); 
   }
 
   //return;
@@ -202,23 +217,25 @@ print ()
     //cbtn_down
     if(zbtn_down){
       //both down, operate grip
-      //up=>open
+      
       if(yOpt==1){
-        //open
-        digitalWrite(6,HIGH);
+        
+        digitalWrite(CLOSEGRIP,HIGH);
       }
       else if(yOpt==-1){
-        digitalWrite(7,HIGH);
+        digitalWrite(OPENGRIP,HIGH);
       }
+      
+      digitalWrite(SEARCHLIGHT,HIGH);
     }
     else{
       //only cdown
       if(yOpt==1){
 
-        digitalWrite(9,HIGH);
+        digitalWrite(M2U,HIGH);
       }
       else if(yOpt==-1){
-        digitalWrite(8,HIGH);
+        digitalWrite(M2D,HIGH);
       }     
 
     }
@@ -232,28 +249,28 @@ print ()
       //zbtn down
       //4,5
       if(yOpt==1){
-        digitalWrite(5,HIGH);
+        digitalWrite(M3U,HIGH);
       }
       else if(yOpt==-1){
-        digitalWrite(4,HIGH); 
+        digitalWrite(M3D,HIGH); 
       }
     }
     else{
       //zbtn not down
       //Lower 2,3
       if(yOpt==1){
-        digitalWrite(2,HIGH);
+        digitalWrite(M1U,HIGH);
       }
       else if(yOpt==-1){
-        digitalWrite(3,HIGH); 
+        digitalWrite(M1D,HIGH); 
       }
     } 
   }
 
-  delay(20);
-  for(int i=2;i<=12;i++){
+  //delay(20);
+  /*for(int i=2;i<=12;i++){
     digitalWrite(i,LOW); 
-  }
+  }*/
 
 }
 
@@ -287,14 +304,14 @@ void on_one_motor(int x){
 }
 
 void demoLoop(){
-  for(int i=2;i<=12;i++){
+  for(int i=2;i<=3;i++){
     digitalWrite(i,HIGH);
     delay(200);
     digitalWrite(i,LOW);
     delay(500); 
   }
 
-  delay(5000); 
+  delay(500); 
 }
 
 void resetArm()
